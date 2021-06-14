@@ -6,7 +6,6 @@
         android:required="false" />
    <application
         android:label="g60"
-        android:banner="@drawable/banner"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
