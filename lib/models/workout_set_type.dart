@@ -1,0 +1,1 @@
+enum WorkoutSetType { Normal, Move, Hydrate, Stay, Complete, Waiting }

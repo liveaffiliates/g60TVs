@@ -1,14 +1,17 @@
-import 'package:circular_countdown_timer/circular_countdown_timer.dart';
+
 import 'package:flutter/material.dart';
 import 'package:g60/theme/g60_colors.dart';
 import 'package:animate_do/animate_do.dart';
 
+import '../../widgets/Timer/countdown_timer.dart';
+
 class TimerRow extends StatefulWidget {
 
-  final int timerLength;
-  final CountDownController controller;
+  final int setsToGo;
+  final Color timerContainerBackgroundColor;
+  final TimerWidget timerWidget;
 
-  TimerRow({required this.timerLength, required this.controller});
+  TimerRow({required this.timerWidget, required this.timerContainerBackgroundColor, required this.setsToGo});
 
   @override
   _TimerRowState createState() => _TimerRowState();
@@ -16,13 +19,8 @@ class TimerRow extends StatefulWidget {
 
 class _TimerRowState extends State<TimerRow> {
 
-
-
-
-
   @override
   Widget build(BuildContext context) {
-
 
     double height = MediaQuery. of(context). size. height;
     double width = MediaQuery. of(context). size. width;
@@ -32,9 +30,6 @@ class _TimerRowState extends State<TimerRow> {
 
     double rowHeight = (height-(1*gapLargeWidth+2*gapSmallWidth))/4;
     double topColumnSize = (width-(2*gapLargeWidth))/3;
-
-    Color? grey = Colors.grey;
-    Color? purple = Colors.purple;
 
     return Container(
       child: Row(
@@ -49,7 +44,7 @@ class _TimerRowState extends State<TimerRow> {
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('WORK', style: Theme.of(context).textTheme.headline3,),
+                Text('WORK', textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline3,),
                 SizedBox(height: 20,),
                 Pulse(
                   duration: Duration(milliseconds: 1000),
@@ -63,69 +58,16 @@ class _TimerRowState extends State<TimerRow> {
           Container(
             width: topColumnSize,
             height:rowHeight,
-            color: g60Green,
+            color: widget.timerContainerBackgroundColor,
             child: Center(child:
-            CircularCountDownTimer(
-              duration: widget.timerLength,
-              initialDuration: 0,
-
-              // Controls (i.e Start, Pause, Resume, Restart) the Countdown Timer.
-              controller: widget.controller,
-              width: 100,
-              height: 100,
-
-              // Ring Color for Countdown Widget.
-              ringColor: g60LightBlue,
-
-              // Filling Color for Countdown Widget.
-              fillColor: Colors.white,
-
-              // Background Color for Countdown Widget.
-              backgroundColor: Colors.white.withAlpha(0),
-
-              // Background Gradient for Countdown Widget.
-              backgroundGradient: null,
-
-              // Border Thickness of the Countdown Ring.
-              strokeWidth: 10,
-
-              // Begin and end contours with a flat edge and no extension.
-              strokeCap: StrokeCap.square,
-
-              // Text Style for Countdown Text.
-              textStyle: Theme.of(context).textTheme.headline3,
-
-              // Format for the Countdown Text.
-              textFormat: CountdownTextFormat.S,
-
-              // Handles Countdown Timer (true for Reverse Countdown (max to 0), false for Forward Countdown (0 to max)).
-              isReverse: true,
-
-              // Handles Animation Direction (true for Reverse Animation, false for Forward Animation).
-              isReverseAnimation: true,
-
-              // Handles visibility of the Countdown Text.
-              isTimerTextShown: true,
-
-              // Handles the timer start.
-              autoStart: true,
-
-              // This Callback will execute when the Countdown Starts.
-              onStart: () {
-                // Here, do whatever you want
-                print('Countdown Started');
-              },
-
-              // This Callback will execute when the Countdown Ends.
-              onComplete: () {
-                // Here, do whatever you want
-                print('Countdown Ended');
-              },
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                widget.timerWidget,
+              ],
             ),
             ),
           ),
-
-
           Container(color: Colors.black, width: gapLargeWidth, height:rowHeight,),
           Container(
             width: topColumnSize,
@@ -135,12 +77,10 @@ class _TimerRowState extends State<TimerRow> {
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('SETS TO GO', style: Theme.of(context).textTheme.headline3,),
-                SizedBox(height: 20,),
-                Text('3', style: Theme.of(context).textTheme.headline2,),
+                Text('SETS TO GO', textAlign:TextAlign.center, style: Theme.of(context).textTheme.headline3,),
+                Text(widget.setsToGo.toString(), style: Theme.of(context).textTheme.headline2,),
               ],
             )),
-
           ),
         ],),
     );

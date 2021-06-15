@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:g60/views/home/exercise_row.dart';
 import 'package:g60/views/home/timer_row.dart';
-import 'package:video_player/video_player.dart';
 import 'package:g60/theme/g60_colors.dart';
 
 
@@ -21,11 +20,11 @@ class NormalView extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        ExerciseRow(exerciseNumber: '1', rowHeight: rowHeight, columnLeftWidth: columnLeftWidth),
+        ExerciseRow(exerciseNumber: '1', rowHeight: rowHeight, columnLeftWidth: columnLeftWidth, gifLocation: 'assets/1.gif',),
         Container(color: Colors.black, height: gapSmallWidth, width: double.infinity),
-        ExerciseRow(exerciseNumber: '2', rowHeight: rowHeight, columnLeftWidth: columnLeftWidth),
+        ExerciseRow(exerciseNumber: '2', rowHeight: rowHeight, columnLeftWidth: columnLeftWidth, gifLocation: 'assets/2.gif',),
         Container(color: Colors.black, height: gapSmallWidth, width: double.infinity),
-        ExerciseRow(exerciseNumber: '3', rowHeight: rowHeight, columnLeftWidth: columnLeftWidth),
+        ExerciseRow(exerciseNumber: '3', rowHeight: rowHeight, columnLeftWidth: columnLeftWidth, gifLocation: 'assets/3.gif',),
       ],);
   }
 }

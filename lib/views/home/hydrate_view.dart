@@ -10,7 +10,7 @@ class HydrateView extends StatelessWidget {
     return Expanded(
       child: Container(
         color: g60LightBlue,
-        child: Text('Hydrate', style: Theme.of(context).textTheme.headline1,),
+        child: Center(child: Text('Hydrate', textAlign: TextAlign.center,  style: Theme.of(context).textTheme.headline1,)),
       ),
     );
   }

@@ -1,8 +1,10 @@
 
+import 'package:g60/models/workout_set_type.dart';
+
 class WorkoutSet {
 
   int duration;
-  String type;
+  WorkoutSetType type;
 
   WorkoutSet(this.duration, this.type);
 
@@ -12,10 +14,10 @@ class WorkoutSet {
 
   int get getDuration => duration;
 
-  void setType(String value) {
+  void setType(WorkoutSetType value) {
     type = value;
   }
 
-  String get getType => type;
+  WorkoutSetType get getType => type;
 
 }

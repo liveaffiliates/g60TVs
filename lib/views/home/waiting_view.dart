@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:g60/theme/g60_colors.dart';
 
-class MoveView extends StatelessWidget {
+class WaitingView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +12,7 @@ class MoveView extends StatelessWidget {
       child: Container(
         height: double.infinity,
         color: g60LightBlue,
-        child: Center(child: Text('Move Station', textAlign: TextAlign.center,  style: Theme.of(context).textTheme.headline2,)),
+        child: Center(child: Text('Waiting', textAlign: TextAlign.center,  style: Theme.of(context).textTheme.headline2,)),
       ),
     );
   }

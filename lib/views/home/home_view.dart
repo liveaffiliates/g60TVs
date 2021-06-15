@@ -1,18 +1,23 @@
 import 'dart:isolate';
 
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:g60/models/workout_set.dart';
+import 'package:g60/models/workout_set_type.dart';
 import 'package:g60/theme/g60_colors.dart';
-import 'package:circular_countdown_timer/circular_countdown_timer.dart';
 import 'package:after_layout/after_layout.dart';
+import 'package:g60/views/home/complete_view.dart';
 import 'package:g60/views/home/hydrate_view.dart';
 import 'package:g60/views/home/move_view.dart';
 import 'package:g60/views/home/normal_view.dart';
+import 'package:g60/views/home/stay_view.dart';
 import 'package:g60/views/home/timer_row.dart';
-import 'package:video_player/video_player.dart';
-import 'package:g60/services/ntp.dart';
+import 'package:g60/views/home/waiting_view.dart';
+import 'package:g60/widgets/Timer/timer_colors.dart';
 import 'dart:async';
+
+import '../../widgets/Timer/countdown_timer.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({Key? key}) : super(key: key);
@@ -21,97 +26,128 @@ class HomeView extends StatefulWidget {
   _HomeViewState createState() => _HomeViewState();
 }
 
-class _HomeViewState extends State<HomeView> with AfterLayoutMixin<HomeView>{
+class _HomeViewState extends State<HomeView> with AfterLayoutMixin<HomeView>, TickerProviderStateMixin{
 
-  CountDownController controller = CountDownController();
-
-  int numberOfSecondPast = 0;
-  int setsToGo = 3;
-  int timersComplete = 0;
-  List <int> pod1Timers = [15,15,15];
-  List <int> pod2Timers = [15,15,15];
-  List <int> pod3Timers = [15,15,15];
-  //Color timerColor = g60Green;
-  //Color timerFontColor = Colors.black;
-  bool workoutComplete = false;
-  //int hydrationBreakTimer = 30;
-
-  int setTime = 5;
-  int moveTime = 5;
-  int hydrationTime = 5;
-  String setType = 'Normal';
-
-
-  List<WorkoutSet> timers = [
-    WorkoutSet(10, 'Normal'),
-    WorkoutSet(10, 'Move'),
-    WorkoutSet(10, 'Normal'),
-    WorkoutSet(10, 'Move'),
-    WorkoutSet(20, 'Normal'),
-    WorkoutSet(10, 'Move'),
-    WorkoutSet(20, 'Normal'),
-    WorkoutSet(20, 'Hydrate'),
-    WorkoutSet(10, 'Normal'),
-    WorkoutSet(20, 'Hydrate'),
-    WorkoutSet(20, 'Normal'),
-  ];
-
-  bool start = false;
+  late AnimationController controller;
 
   late int timerValue;
-  late int timerLength = 10;
-
+  late int timerDuration;
+  int timerCurrentSeconds = 0;
   late StreamSubscription secondsSub;
+  int numberOfSetsCompleted = 0;
+  int normalTime = 30;
+  int moveTime = 30;
+  int hydrationTime = 5;
+  int stayTime = 5;
+  late WorkoutSetType setType;
+  List<WorkoutSet> workoutSets = [];
+  Color timerColor = g60Green;
+  Color timerFontColor = Colors.black;
+  late int setsToGo;
+  var startSignalSub;
+
+
+  @override
+  void initState() {
+    super.initState();
+    workoutSets.add(WorkoutSet(normalTime, WorkoutSetType.Normal),);
+    workoutSets.add(WorkoutSet(stayTime, WorkoutSetType.Stay),);
+    workoutSets.add(WorkoutSet(normalTime, WorkoutSetType.Normal),);
+    workoutSets.add(WorkoutSet(moveTime, WorkoutSetType.Move),);
+    workoutSets.add(WorkoutSet(normalTime, WorkoutSetType.Normal),);
+    workoutSets.add(WorkoutSet(stayTime, WorkoutSetType.Stay),);
+    workoutSets.add(WorkoutSet(normalTime, WorkoutSetType.Normal),);
+    workoutSets.add(WorkoutSet(moveTime, WorkoutSetType.Move),);
+    workoutSets.add(WorkoutSet(normalTime, WorkoutSetType.Normal),);
+    workoutSets.add(WorkoutSet(stayTime, WorkoutSetType.Stay),);
+    workoutSets.add(WorkoutSet(normalTime, WorkoutSetType.Normal),);
+    workoutSets.add(WorkoutSet(hydrationTime, WorkoutSetType.Hydrate),);
+    workoutSets.add(WorkoutSet(normalTime, WorkoutSetType.Normal),);
+    setType = WorkoutSetType.Waiting;
+    timerDuration = workoutSets[0].getDuration;
+    setsToGo = workoutSets.length;
+    timerValue = timerDuration;
+    controller = AnimationController(
+      vsync: this,
+      duration: Duration(seconds: workoutSets[0].getDuration),
+    );
+  }
 
   @override
   void afterFirstLayout(BuildContext context) async {
-    secondsLoop();
+    listenForStartSignal();
   }
 
+  void listenForStartSignal(){
+    startSignalSub = FirebaseDatabase.instance
+        .reference()
+        .child('start')
+        .onValue
+        .listen((data) {
+          if (data.snapshot.value == true){
+            print('running');
+            startExercise();
+          }
+        });
+  }
 
-  void secondsLoop() async {
+  void startExercise() async {
+    setState(() {
+      setType = workoutSets[0].getType;
+    });
     const Duration timerDuration = const Duration(seconds: 1);
-
     secondsSub = new Stream.periodic(timerDuration)
         .listen((_) => updateTimer());
   }
 
-  void updateTimer () async {
-
-    // if (timersComplete == timers.length-1){
-    //   secondsSub.cancel();
-    //   workoutComplete = true;
-    // }
-
-    numberOfSecondPast++;
-    if (numberOfSecondPast == timers[timersComplete].getDuration) {
-      numberOfSecondPast = 0;
-      timersComplete++;
-      setState(() {
-        timerLength = timers[timersComplete].getDuration;
-        controller.restart(duration: timerLength);
-      });
-      setType = timers[timersComplete].getType;
-      print(timersComplete.toString());
-      print(timers.length.toString());
+  void startTimer(){
+    if (!controller.isAnimating){
+      controller.reverse(
+          from: controller.value == 0.0
+              ? 1.0
+              : controller.value);
     }
+  }
 
+  void updateTimer () async {
+    startTimer();
     setState(() {
-      timerLength = timers[timersComplete].getDuration;
-      // int timeLeft = timerLength-numberOfSecondPast;
-      // timerValue = timeLeft;
-
-      // if (timeLeft > 5){
-      //   timerColor = g60Green;
-      //   timerFontColor = Colors.black;
-      // } else {
-      //   timerColor = g60Red;
-      //   timerFontColor = Colors.white;
-      // }
-
-
-
+      timerValue = timerDuration - timerCurrentSeconds;
     });
+
+    if (timerCurrentSeconds == timerDuration) {
+      print(numberOfSetsCompleted);
+      print(workoutSets.length);
+      if (numberOfSetsCompleted != workoutSets.length-1){
+        setState(() {
+          // Reset the seconds counter
+          timerCurrentSeconds = 0;
+          // Go to the next set
+          numberOfSetsCompleted++;
+          // Set the new timer time for the new set
+          timerDuration = workoutSets[numberOfSetsCompleted].getDuration;
+          // Set the set type to the type of the new set
+          setType = workoutSets[numberOfSetsCompleted].getType;
+          // Reset the timer
+          controller.reset();
+
+          // Update the sets to go
+          setsToGo = workoutSets.length - numberOfSetsCompleted;
+        });
+
+      } else {
+
+        secondsSub.cancel();
+        setState(() {
+          setType = WorkoutSetType.Complete;
+          setsToGo = 0;
+        });
+      }
+
+    } else {
+      // Add one to the timer seconds
+      timerCurrentSeconds++;
+    }
   }
 
   @override
@@ -127,8 +163,22 @@ class _HomeViewState extends State<HomeView> with AfterLayoutMixin<HomeView>{
             mainAxisAlignment: MainAxisAlignment.start,
             mainAxisSize: MainAxisSize.max,
             children: [
-              TimerRow(timerLength: timerLength, controller: controller,),
-              Container(color: Colors.black, width: double.infinity, height: 15,),
+              if (setType != WorkoutSetType.Complete || setType != WorkoutSetType.Waiting)
+              Column(
+                children: [
+                  TimerRow(
+                    timerContainerBackgroundColor: timerContainerBackgroundColor(setType),
+                    setsToGo: setsToGo,
+                    timerWidget: TimerWidget(
+                      timerValue: timerValue,
+                      animationController: controller,
+                      timerDuration: timerDuration,
+                      timerTextColor: timerTextColor(setType),
+                    )
+                  ),
+                  Container(color: Colors.black, width: double.infinity, height: 15,),
+                ],
+              ),
               getContentSection(),
             ],
           )),
@@ -137,19 +187,35 @@ class _HomeViewState extends State<HomeView> with AfterLayoutMixin<HomeView>{
 
   Widget getContentSection(){
     switch(setType) {
-      case 'Normal': {
+      case WorkoutSetType.Normal: {
         return NormalView();
       }
-      case 'Move': {
+      case WorkoutSetType.Move: {
         return MoveView();
       }
-      case 'Hydrate': {
+      case WorkoutSetType.Hydrate: {
         return HydrateView();
+      }
+      case WorkoutSetType.Stay: {
+        return StayView();
+      }
+      case WorkoutSetType.Complete: {
+        return CompleteView();
+      }
+      case WorkoutSetType.Waiting: {
+        return WaitingView();
       }
       default: {
         return NormalView();
       }
     }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    startSignalSub.cancel();
+    secondsSub.cancel();
   }
 }
 
