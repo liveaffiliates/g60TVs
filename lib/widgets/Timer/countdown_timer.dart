@@ -11,12 +11,12 @@ class TimerWidget extends StatefulWidget {
   final int timerDuration;
   final AnimationController animationController;
 
+
   TimerWidget({
     required this.timerValue,
     required this.timerDuration,
     required this.animationController,
     required this.timerTextColor,
-
   });
 
 
@@ -31,47 +31,42 @@ class TimerWidgetState extends State<TimerWidget> with TickerProviderStateMixin 
     ThemeData themeData = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.all(10.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          AspectRatio(
-            aspectRatio: 1.0,
-            child: Stack(
-              children: <Widget>[
-                Positioned.fill(
-                  child: AnimatedBuilder(
-                    animation: widget.animationController,
-                    builder: (BuildContext context, Widget? child) {
-                      return CustomPaint(
-                          painter: TimerPainter(
-                            animation: widget.animationController,
-                            backgroundColor: timerBackgroundColor(),
-                            color: timerProgressColor(),
-                          ));
-                    },
-                  ),
-                ),
-                Align(
-                  alignment: FractionalOffset.center,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      AnimatedBuilder(
-                          animation: widget.animationController,
-                          builder: (BuildContext context, Widget? child) {
-                            return Text(
-                              widget.timerValue == 0 ? widget.timerDuration.toString() : widget.timerValue.toString(),
-                              style: themeData.textTheme.headline2!.copyWith(color: widget.timerTextColor),
-                            );
-                          }),
-                    ],
-                  ),
-                ),
-              ],
+      child: AspectRatio(
+        aspectRatio: 1.0,
+        child: Stack(
+          children: <Widget>[
+            Positioned.fill(
+              child: AnimatedBuilder(
+                animation: widget.animationController,
+                builder: (BuildContext context, Widget? child) {
+                  return CustomPaint(
+                      painter: TimerPainter(
+                        animation: widget.animationController,
+                        backgroundColor: timerBackgroundColor(),
+                        color: timerProgressColor(),
+                      ));
+                },
+              ),
             ),
-          ),
-        ],
+            Align(
+              alignment: FractionalOffset.center,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  AnimatedBuilder(
+                      animation: widget.animationController,
+                      builder: (BuildContext context, Widget? child) {
+                        return Text(
+                          widget.timerValue == 0 ? widget.timerDuration.toString() : widget.timerValue.toString(),
+                          style: themeData.textTheme.headline2!.copyWith(color: widget.timerTextColor),
+                        );
+                      }),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

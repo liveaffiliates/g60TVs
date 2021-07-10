@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:g60/screens/createworkoutsscreen/createworkoutscreen.dart';
+import 'package:g60/screens/homescreen/homescreen.dart';
+import 'package:g60/screens/savedworkoutsscreen/savedworkoutsscreen.dart';
+import 'package:g60/screens/setupstudioscreen/setupstudioscreen.dart';
 import 'package:g60/theme/app_theme.dart';
 import 'package:g60/routes.dart';
 import 'package:g60/views/home/home_view.dart';
+import 'package:stacked_services/stacked_services.dart';
+
+import 'screens/startworkoutscreen/startworkoutscreen.dart';
 
 
-class App extends StatelessWidget {
+class G60App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     /// TODO - Allow other orientations
@@ -20,9 +27,10 @@ class App extends StatelessWidget {
       },
       child: MaterialApp(
         title: 'G60',
+        navigatorKey: StackedService.navigatorKey,
         theme: appTheme,
         debugShowCheckedModeBanner: false,
-        home: HomeView(),
+        home: HomeScreen(),
         routes: buildRoutes(context),
       ),
     );
@@ -30,31 +38,12 @@ class App extends StatelessWidget {
 
   Map<String, WidgetBuilder> buildRoutes(BuildContext context) {
     return {
-      Routes.homeView: (BuildContext context) => HomeView(),
+      Routes.homeScreen: (BuildContext context) => HomeView(),
+      Routes.startWorkoutScreen: (BuildContext context) => StartWorkoutScreen(),
+      Routes.savedWorkoutsScreen: (BuildContext context) => SavedWorkoutsScreen(),
+      Routes.createWorkoutScreen: (BuildContext context) => CreateWorkoutScreen(),
+      Routes.setupStudioScreen: (BuildContext context) => SetupStudioScreen(),
     };
   }
 }
 
-class MyHomePage extends StatefulWidget {
-
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-
-  @override
-  Widget build(BuildContext context) {
-
-    return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-
-
-        ],
-      ),
-      // This trailing comma makes auto-formatting nicer for build methods.
-    );
-  }
-}

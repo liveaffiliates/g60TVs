@@ -1,6 +1,6 @@
 import 'dart:isolate';
 
-import 'package:firebase_database/firebase_database.dart';
+//import 'package:firebase/firebase.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:g60/models/workout_set.dart';
@@ -16,6 +16,7 @@ import 'package:g60/views/home/timer_row.dart';
 import 'package:g60/views/home/waiting_view.dart';
 import 'package:g60/widgets/Timer/timer_colors.dart';
 import 'dart:async';
+//import 'package:firebase/firebase.dart';
 
 import '../../widgets/Timer/countdown_timer.dart';
 
@@ -35,16 +36,18 @@ class _HomeViewState extends State<HomeView> with AfterLayoutMixin<HomeView>, Ti
   int timerCurrentSeconds = 0;
   late StreamSubscription secondsSub;
   int numberOfSetsCompleted = 0;
-  int normalTime = 30;
-  int moveTime = 30;
-  int hydrationTime = 5;
-  int stayTime = 5;
+  int normalTime = 200;
+  int moveTime = 10;
+  int hydrationTime = 10;
+  int stayTime = 10;
   late WorkoutSetType setType;
   List<WorkoutSet> workoutSets = [];
   Color timerColor = g60Green;
   Color timerFontColor = Colors.black;
   late int setsToGo;
   var startSignalSub;
+  int screenNumber = 2;
+
 
 
   @override
@@ -79,16 +82,19 @@ class _HomeViewState extends State<HomeView> with AfterLayoutMixin<HomeView>, Ti
   }
 
   void listenForStartSignal(){
-    startSignalSub = FirebaseDatabase.instance
-        .reference()
-        .child('start')
-        .onValue
-        .listen((data) {
-          if (data.snapshot.value == true){
-            print('running');
-            startExercise();
-          }
-        });
+    // Database db = database();
+    // DatabaseReference ref = db.ref('start');
+    // startSignalSub = ref
+    //     .onValue
+    //     .listen((data) {
+    //
+    //       bool startValue = data.snapshot.val();
+    //
+    //       if (startValue == true){
+    //         print('running');
+    //         startExercise();
+    //       }
+    //     });
   }
 
   void startExercise() async {
@@ -152,8 +158,16 @@ class _HomeViewState extends State<HomeView> with AfterLayoutMixin<HomeView>, Ti
 
   @override
   Widget build(BuildContext context) {
+    print(setType.toString());
 
-    double height = MediaQuery. of(context).size.height;
+    double height = MediaQuery. of(context). size. height;
+    double width = MediaQuery. of(context). size. width;
+
+    double gapLargeWidth = 15;
+    double gapSmallWidth = 5;
+
+    double rowHeight = (height-(1*gapLargeWidth+2*gapSmallWidth))/4;
+    double topColumnSize = (width-(2*gapLargeWidth))/3;
 
     return Scaffold (
       body: Container(
@@ -163,21 +177,23 @@ class _HomeViewState extends State<HomeView> with AfterLayoutMixin<HomeView>, Ti
             mainAxisAlignment: MainAxisAlignment.start,
             mainAxisSize: MainAxisSize.max,
             children: [
-              if (setType != WorkoutSetType.Complete || setType != WorkoutSetType.Waiting)
-              Column(
-                children: [
-                  TimerRow(
-                    timerContainerBackgroundColor: timerContainerBackgroundColor(setType),
-                    setsToGo: setsToGo,
-                    timerWidget: TimerWidget(
-                      timerValue: timerValue,
-                      animationController: controller,
-                      timerDuration: timerDuration,
-                      timerTextColor: timerTextColor(setType),
-                    )
-                  ),
-                  Container(color: Colors.black, width: double.infinity, height: 15,),
-                ],
+              Visibility(
+                visible: setType != WorkoutSetType.Waiting && setType != WorkoutSetType.Complete,
+                child: Column(
+                  children: [
+                    TimerRow(
+                      timerContainerBackgroundColor: timerContainerBackgroundColor(setType),
+                      setsToGo: setsToGo,
+                      timerWidget: TimerWidget(
+                        timerValue: timerValue,
+                        animationController: controller,
+                        timerDuration: timerDuration,
+                        timerTextColor: timerTextColor(setType),
+                      )
+                    ),
+                    Container(color: Colors.black, width: double.infinity, height: 15,),
+                  ],
+                ),
               ),
               getContentSection(),
             ],
@@ -188,7 +204,7 @@ class _HomeViewState extends State<HomeView> with AfterLayoutMixin<HomeView>, Ti
   Widget getContentSection(){
     switch(setType) {
       case WorkoutSetType.Normal: {
-        return NormalView();
+        return NormalView(screenNumber);
       }
       case WorkoutSetType.Move: {
         return MoveView();
@@ -206,7 +222,7 @@ class _HomeViewState extends State<HomeView> with AfterLayoutMixin<HomeView>, Ti
         return WaitingView();
       }
       default: {
-        return NormalView();
+        return NormalView(screenNumber);
       }
     }
   }

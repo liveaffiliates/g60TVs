@@ -6,6 +6,10 @@ import 'package:g60/theme/g60_colors.dart';
 
 class NormalView extends StatelessWidget {
 
+  final int screenNumber;
+
+  NormalView(this.screenNumber);
+
   @override
   Widget build(BuildContext context) {
 
@@ -20,11 +24,14 @@ class NormalView extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        ExerciseRow(exerciseNumber: '1', rowHeight: rowHeight, columnLeftWidth: columnLeftWidth, gifLocation: 'assets/1.gif',),
+        ExerciseRow(exerciseNumber: (screenNumber == 1) ? '1' : '4', rowHeight: rowHeight, columnLeftWidth: columnLeftWidth,
+          gifLocation: (screenNumber == 1) ?'assets/1.gif' : 'assets/3.gif',),
         Container(color: Colors.black, height: gapSmallWidth, width: double.infinity),
-        ExerciseRow(exerciseNumber: '2', rowHeight: rowHeight, columnLeftWidth: columnLeftWidth, gifLocation: 'assets/2.gif',),
+        ExerciseRow(exerciseNumber: (screenNumber == 1) ? '2' : '5', rowHeight: rowHeight, columnLeftWidth: columnLeftWidth,
+          gifLocation: (screenNumber == 1) ? 'assets/2.gif' : 'assets/2.gif',),
         Container(color: Colors.black, height: gapSmallWidth, width: double.infinity),
-        ExerciseRow(exerciseNumber: '3', rowHeight: rowHeight, columnLeftWidth: columnLeftWidth, gifLocation: 'assets/3.gif',),
+        ExerciseRow(exerciseNumber: (screenNumber == 1) ? '3' : '6', rowHeight: rowHeight, columnLeftWidth: columnLeftWidth,
+          gifLocation: (screenNumber == 1) ?'assets/3.gif' : 'assets/1.gif')
       ],);
   }
 }

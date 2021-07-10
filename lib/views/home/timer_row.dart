@@ -59,14 +59,10 @@ class _TimerRowState extends State<TimerRow> {
             width: topColumnSize,
             height:rowHeight,
             color: widget.timerContainerBackgroundColor,
-            child: Center(child:
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                widget.timerWidget,
-              ],
-            ),
-            ),
+            child: Container(
+                height: rowHeight,
+                width: rowHeight,
+                child: Center(child: widget.timerWidget)),
           ),
           Container(color: Colors.black, width: gapLargeWidth, height:rowHeight,),
           Container(
