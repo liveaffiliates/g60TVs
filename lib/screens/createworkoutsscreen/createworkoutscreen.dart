@@ -309,14 +309,13 @@ class _CreateWorkoutScreenState extends State<CreateWorkoutScreen> {
             itemCount: numStations,
             itemBuilder: (BuildContext ctxt, int stationIndex) {
               return Padding(
-                padding: EdgeInsets.only(bottom: 20, left: 20, right: 20),
+                padding: EdgeInsets.only(bottom: 100, left: 50, right: 50),
                 child: Container(
-                  color: Colors.white.withOpacity(0.4),
                   width: double.infinity,
 
                   child: Column(
                     children: [
-                      Text('Station ' + (stationIndex + 1).toString(), style: Theme.of(context).textTheme.bodyText1!.copyWith(fontWeight: FontWeight.bold, fontSize: 26, color: Colors.white)),
+                      Text('Station ' + (stationIndex + 1).toString(), style: Theme.of(context).textTheme.bodyText1!.copyWith(fontWeight: FontWeight.bold, fontSize: 32, color: Colors.white)),
                       ListView.builder(
                           shrinkWrap: true,
                           physics: NeverScrollableScrollPhysics(),
@@ -324,10 +323,39 @@ class _CreateWorkoutScreenState extends State<CreateWorkoutScreen> {
                           itemBuilder: (BuildContext ctxt, int setIndex) {
                             return Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: Container(
-                              color: Colors.blue,
-                              width: double.infinity,
-                              child: Text('Set ' + (setIndex + 1).toString(), style: Theme.of(context).textTheme.bodyText1,)),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(30),
+                                child: Container(
+                                color: g60LightGreyBlue.withOpacity(0.8),
+                                width: double.infinity,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(20.0),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: [
+                                      ClipRRect(
+                                          borderRadius: BorderRadius.circular(30),
+                                          child: Image.asset('assets/fit1jpg.jpg', width: 200, height: 200, fit: BoxFit.cover,)),
+                                      SizedBox(width: 30,),
+                                      Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text('Exercise: ', style: Theme.of(context).textTheme.bodyText1!.copyWith(fontWeight: FontWeight.bold, fontSize: 24, color: Colors.white)),
+                                          SizedBox(height: 5,),
+                                          Text('Set Duration: ' + setDuration.toString(), style: Theme.of(context).textTheme.bodyText1!.copyWith(fontWeight: FontWeight.bold, fontSize: 24, color: Colors.white)),
+                                          SizedBox(height: 5,),
+                                          Text('Rest period after set: ', style: Theme.of(context).textTheme.bodyText1!.copyWith(fontWeight: FontWeight.bold, fontSize: 24, color: Colors.white)),
+                                        ],
+                                      ),
+                                      Spacer(),
+                                      IconButton(
+                                        icon: Icon(Icons.edit_rounded, size: 40, color: Colors.white,),
+                                        onPressed: (){}),
+                                      SizedBox(width: 20,),
+                                    ],
+                                  ),
+                                )),
+                              ),
                             );
                           }
                       )],

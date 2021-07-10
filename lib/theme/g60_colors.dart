@@ -6,6 +6,10 @@ Color g60DarkBlue = HexColor('211652');
 Color g60LightBlue = HexColor('1724c3');
 Color g60ButtonColor = HexColor('#19181e');
 
+Color g60LightGreyBlue = HexColor('#668491');
+
+
+
 
 
 
