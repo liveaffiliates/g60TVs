@@ -18,9 +18,6 @@ Color timerContainerBackgroundColor (WorkoutSetType type) {
     case WorkoutSetType.Move: {
       return g60Red;
     }
-    case WorkoutSetType.Hydrate: {
-      return g60LightBlue;
-    }
     case WorkoutSetType.Stay: {
       return g60Red;
     }
@@ -37,9 +34,6 @@ Color timerTextColor (WorkoutSetType type) {
     }
     case WorkoutSetType.Move: {
       return Colors.white;
-    }
-    case WorkoutSetType.Hydrate: {
-      return Colors.black;
     }
     case WorkoutSetType.Stay: {
       return Colors.black;

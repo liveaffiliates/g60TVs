@@ -45,6 +45,8 @@ class _SetupStudioScreenState extends State<SetupStudioScreen> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
 
+                      Text
+
                   ],),
                 ),
               )

@@ -64,7 +64,6 @@ class _HomeViewState extends State<HomeView> with AfterLayoutMixin<HomeView>, Ti
     workoutSets.add(WorkoutSet(normalTime, WorkoutSetType.Normal),);
     workoutSets.add(WorkoutSet(stayTime, WorkoutSetType.Stay),);
     workoutSets.add(WorkoutSet(normalTime, WorkoutSetType.Normal),);
-    workoutSets.add(WorkoutSet(hydrationTime, WorkoutSetType.Hydrate),);
     workoutSets.add(WorkoutSet(normalTime, WorkoutSetType.Normal),);
     setType = WorkoutSetType.Waiting;
     timerDuration = workoutSets[0].getDuration;
@@ -208,9 +207,6 @@ class _HomeViewState extends State<HomeView> with AfterLayoutMixin<HomeView>, Ti
       }
       case WorkoutSetType.Move: {
         return MoveView();
-      }
-      case WorkoutSetType.Hydrate: {
-        return HydrateView();
       }
       case WorkoutSetType.Stay: {
         return StayView();

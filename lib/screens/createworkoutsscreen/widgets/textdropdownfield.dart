@@ -5,7 +5,7 @@ import 'package:g60/theme/g60_colors.dart';
 class TextDropdownField extends StatelessWidget {
 
   final String hintText;
-  final Function onChanged;
+  final Function onUpdate;
   final String value;
   final List <String> dropDownList;
 
@@ -13,7 +13,7 @@ class TextDropdownField extends StatelessWidget {
     required this.hintText,
     required this.dropDownList,
     required this.value,
-    required this.onChanged,
+    required this.onUpdate,
   });
 
   @override
@@ -49,7 +49,7 @@ class TextDropdownField extends StatelessWidget {
                   isExpanded: true,
                   value: value,
                   isDense: true,
-                  onChanged: (String? newValue) => onChanged(newValue),
+                  onChanged: (String? newValue) => onUpdate(newValue),
                   items: dropDownList.map((String value) {
                     return DropdownMenuItem<String>(
                       value: value,
