@@ -6,8 +6,8 @@ class TextDropdownField extends StatelessWidget {
 
   final String hintText;
   final Function onUpdate;
-  final String value;
-  final List <String> dropDownList;
+  final dynamic value;
+  final List <dynamic> dropDownList;
 
   TextDropdownField({
     required this.hintText,
@@ -45,15 +45,15 @@ class TextDropdownField extends StatelessWidget {
               child: Listener(
                 onPointerDown:(_) { FocusScope.of(context).requestFocus(FocusNode());},
                 child: DropdownButtonHideUnderline(
-                child: DropdownButton<String>(
+                child: DropdownButton<dynamic>(
                   isExpanded: true,
                   value: value,
                   isDense: true,
-                  onChanged: (String? newValue) => onUpdate(newValue),
-                  items: dropDownList.map((String value) {
-                    return DropdownMenuItem<String>(
+                  onChanged: (dynamic newValue) => onUpdate(newValue),
+                  items: dropDownList.map((value) {
+                    return DropdownMenuItem<dynamic>(
                       value: value,
-                      child: Center(child: Text(value)),
+                      child: Center(child: Text(value.toString())),
                     );
                   }).toList(),
                 hint: Text(
@@ -62,7 +62,7 @@ class TextDropdownField extends StatelessWidget {
                   textAlign: TextAlign.start,
                 ),
                 ),
-          ),
+                ),
               ),
             ),
           ),

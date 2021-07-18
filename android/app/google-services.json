@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "1084847433812-ok353cn44pr15f7evlgkvirrapf310rh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.roboticc.g60",
+            "certificate_hash": "fac17ae5cd8f545051ac559111ca0f6bffc11dfc"
+          }
+        },
+        {
           "client_id": "1084847433812-eik32a2t5v1hq2an62t5tn905b093463.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -30,6 +38,13 @@
             {
               "client_id": "1084847433812-eik32a2t5v1hq2an62t5tn905b093463.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "1084847433812-oblvddqla4hm8rgflpp6jr6val3q5q87.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.roboticc.g60"
+              }
             }
           ]
         }

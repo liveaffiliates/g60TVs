@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
+import 'package:g60/services/firebase_service.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:g60/locator.dart';
 import 'package:uuid/uuid.dart';
 import 'dart:convert';
 import 'package:g60/common/viewstate.dart';
-import 'package:g60/services/firestoreservice.dart';
 
 
 class BaseViewModel extends ChangeNotifier {

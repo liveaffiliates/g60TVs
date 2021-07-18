@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:g60/screens/createworkoutsscreen/createworkoutviewmodel.dart';
+import 'package:g60/screens/createworkoutsscreen/popups/pickexerciseviewmodel.dart';
 import 'package:g60/screens/savedworkoutsscreen/savedworkoutsviewmodel.dart';
 import 'package:g60/screens/setupstudioscreen/setupstudioviewmodel.dart';
 import 'package:g60/screens/startworkoutscreen/startworkoutviewmodel.dart';
@@ -9,7 +10,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:g60/screens/homescreen/homeviewmodel.dart';
 import 'package:stacked_services/stacked_services.dart';
 
-import 'services/firestoreservice.dart';
+import 'services/firebase_service.dart';
 
 
 
@@ -40,6 +41,7 @@ void setupViewModels() {
   locator.registerFactory(() => SavedWorkoutsViewModel());
   locator.registerFactory(() => CreateWorkoutViewModel());
   locator.registerFactory(() => SetupStudioViewModel());
+  locator.registerFactory(() => PickExerciseViewModel());
 
 }
 

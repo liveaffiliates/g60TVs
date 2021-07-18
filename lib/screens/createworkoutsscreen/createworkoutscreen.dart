@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:g60/models/exercise.dart';
 import 'package:g60/models/workout.dart';
+import 'package:g60/screens/createworkoutsscreen/popups/pickexercisepopup.dart';
+import 'package:g60/screens/createworkoutsscreen/settingdropdown.dart';
 import 'package:g60/screens/createworkoutsscreen/widgets/textdropdownfield.dart';
 import 'package:g60/screens/createworkoutsscreen/widgets/textentryfield.dart';
 import 'package:g60/theme/g60_colors.dart';
@@ -12,9 +14,6 @@ import 'package:intl/intl.dart';
 import 'package:g60/screens/basescreen/base_view.dart';
 import '../../routes.dart';
 import 'createworkoutviewmodel.dart';
-import 'package:sliding_up_panel/sliding_up_panel.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter/services.dart';
 import 'dart:ui';
 
@@ -77,187 +76,97 @@ class _CreateWorkoutScreenState extends State<CreateWorkoutScreen> {
   Widget _body() {
     return SingleChildScrollView(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 50.0),
+        padding: const EdgeInsets.symmetric(horizontal: 20.0),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             SizedBox(
-              height: 12.0,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Container(
-                  width: 30,
-                  height: 5,
-                  decoration: BoxDecoration(
-                      color: Colors.grey[300],
-                      borderRadius: BorderRadius.all(Radius.circular(12.0))),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 18.0,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text(
-                  "Create Workout",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 32.0,
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 36.0,
+              height: 50.0,
             ),
 
-            Column(
-              children: [
-                TextEntryField(
-                  hintText: 'Workout Name',
-                  initialValue: '',
-                  inputType: TextInputType.text,
-                  numberOfLines: 1,
-                  onChanged: (){},
-                  enable: true,
-                )
-              ],
+            Text(
+              "Create Workout",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 32.0,
+              ),
             ),
-
             SizedBox(
               height: 20.0,
             ),
 
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Expanded(
-                  child: Column(
-                    children: [
-                      Text(
-                        "Number of stations",
-                        style: TextStyle(
-                          fontWeight: FontWeight.normal,
-                          fontSize: 24.0,
-                        ),
-                      ),
-                      SizedBox(height: 5,),
-                      TextDropdownField(
-                        hintText: '',
-                        onUpdate: (){},
-                        value: '1',
-                        dropDownList: ['1', '2', '3', '4', '5'],
-                      ),
-                    ],
-                  ),
-                ),
-
-                SizedBox(width: 20,),
-
-                Expanded(
-                  child: Column(
-                    children: [
-                      Text(
-                        "Sets per station",
-                        style: TextStyle(
-                          fontWeight: FontWeight.normal,
-                          fontSize: 24.0,
-                        ),
-                      ),
-                      SizedBox(height: 5,),
-                      TextDropdownField(
-                        hintText: '',
-                        onUpdate: (){},
-                        value: '1',
-                        dropDownList: ['1', '2', '3', '4', '5'],
-                      ),
-                    ],
-                  ),
-                ),
-
-                SizedBox(width: 20,),
-
-                Expanded(
-                  child: Column(
-                    children: [
-                      Text(
-                        "Set duration",
-                        style: TextStyle(
-                          fontWeight: FontWeight.normal,
-                          fontSize: 24.0,
-                        ),
-                      ),
-                      SizedBox(height: 5,),
-                      TextDropdownField(
-                        hintText: '',
-                        onUpdate: (){},
-                        value: '1',
-                        dropDownList: ['1', '2', '3', '4', '5'],
-                      ),
-                    ],
-                  ),
-                ),
-
-              ],
+            TextEntryField(
+              hintText: 'Workout Name',
+              initialValue: '',
+              inputType: TextInputType.text,
+              numberOfLines: 1,
+              onChanged: (){},
+              enable: true,
             ),
-
             SizedBox(
               height: 20.0,
             ),
 
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            Wrap(
+              alignment: WrapAlignment.center,
+              spacing: 20,
               children: [
-                Expanded(
-                  child: Column(
-                    children: [
-                      Text(
-                        "Break between stations",
-                        style: TextStyle(
-                          fontWeight: FontWeight.normal,
-                          fontSize: 24.0,
-                        ),
-                      ),
-                      SizedBox(height: 5,),
-                      TextDropdownField(
-                        hintText: '',
-                        onUpdate: (){},
-                        value: '1',
-                        dropDownList: ['1', '2', '3', '4', '5'],
-                      ),
-                    ],
-                  ),
+                SettingDropDown(
+                  headerText: 'Number of stations',
+                  initialValue: numberOfStations,
+                  onValueSelected: (newValue){
+                    setState(() {
+                      numberOfStations = newValue;
+                    });
+                  },
+                  inputList: [for(var i=1; i<21; i+=1) i],
                 ),
 
-                SizedBox(width: 20,),
-
-                Expanded(
-                  child: Column(
-                    children: [
-                      Text(
-                        "Break between sets",
-                        style: TextStyle(
-                          fontWeight: FontWeight.normal,
-                          fontSize: 24.0,
-                        ),
-                      ),
-                      SizedBox(height: 5,),
-                      TextDropdownField(
-                        hintText: '',
-                        onUpdate: (){},
-                        value: '1',
-                        dropDownList: ['1', '2', '3', '4', '5'],
-                      ),
-                    ],
-                  ),
+                SettingDropDown(
+                  headerText: 'Sets per station',
+                  initialValue: setsPerStation,
+                  onValueSelected: (newValue){
+                    setState(() {
+                      setsPerStation = newValue;
+                    });
+                  },
+                  inputList: [for(var i=1; i<6; i+=1) i],
                 ),
 
-              ],
-            ),
+                SettingDropDown(
+                  headerText: 'Set duration',
+                  initialValue: setDuration,
+                  onValueSelected: (newValue){
+                    setState(() {
+                      setDuration = newValue;
+                    });
+                  },
+                  inputList: [for(var i=1; i<61; i+=1) i]
+                ),
+
+                SettingDropDown(
+                  headerText: 'Break between sets',
+                  initialValue: breakBetweenSets,
+                  onValueSelected: (newValue){
+                    setState(() {
+                      breakBetweenSets = newValue;
+                    });
+                  },
+                  inputList: [for(var i=1; i<61; i+=1) i],
+                ),
+
+                SettingDropDown(
+                  headerText: 'Break between stations',
+                  initialValue: breakBetweenStations,
+                  onValueSelected: (newValue){
+                    setState(() {
+                      breakBetweenStations = newValue;
+                    });
+                  },
+                  inputList: [for(var i=1; i<60; i+=1) i],
+                ),
+            ]),
+
             SizedBox(
               height: 24,
             ),
@@ -283,7 +192,7 @@ class _CreateWorkoutScreenState extends State<CreateWorkoutScreen> {
                                 int exerciseIndex = stationIndex * setsPerStation + setIndex;
 
                                 return Padding(
-                                  padding: const EdgeInsets.only(bottom: 50),
+                                  padding: const EdgeInsets.only(bottom: 20),
                                   child: InkWell(
                                     child: ClipRRect(
                                       borderRadius: BorderRadius.circular(30),
@@ -294,17 +203,21 @@ class _CreateWorkoutScreenState extends State<CreateWorkoutScreen> {
                                         DecorationImage(image: AssetImage('assets/1.gif'),
                                           fit: BoxFit.cover,
                                           colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.3), BlendMode.darken)
-                                        )
+                                         )
                                         ),
                                         child: Center(
-                                          child: Text(exercises[exerciseIndex].name ?? 'Choose Exercise', style: Theme.of(context).textTheme.bodyText1!.copyWith(fontWeight: FontWeight.bold, fontSize: 36, color: Colors.white)) ,
+                                          child: Text(exercises[exerciseIndex].getName ?? 'Choose Exercise', textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyText1!.copyWith(fontWeight: FontWeight.bold, fontSize: 36, color: Colors.white)) ,
                                         ),
                                       ),
                                     ),
                                     onTap: (){
-                                      setState(() {
-                                        exercises[exerciseIndex] = Exercise(name: 'Test Exercise');
-                                      });
+                                      showDialog(
+                                          context: context,
+                                          builder: (_) => PickExercisePopup()
+                                      );
+                                      // setState(() {
+                                      //   exercises[exerciseIndex] = Exercise(name: 'Test Exercise');
+                                      // });
                                     },
                                   ),
                                 );
