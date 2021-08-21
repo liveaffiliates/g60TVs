@@ -5,6 +5,7 @@ import 'package:g60/screens/createworkoutsscreen/popups/pickexerciseviewmodel.da
 import 'package:g60/screens/savedworkoutsscreen/savedworkoutsviewmodel.dart';
 import 'package:g60/screens/setupstudioscreen/setupstudioviewmodel.dart';
 import 'package:g60/screens/startworkoutscreen/startworkoutviewmodel.dart';
+import 'package:g60/services/posservice.dart';
 import 'package:get_it/get_it.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:g60/screens/homescreen/homeviewmodel.dart';
@@ -26,6 +27,7 @@ bool setupLocator()  {
 
 void setupServices() {
   locator.registerLazySingleton(() => FireStoreService());
+  locator.registerLazySingleton(() => PosService());
 
 }
 

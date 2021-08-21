@@ -43,6 +43,7 @@ dependencies:
   nearby_connections: ^3.1.0
   video_player: ^2.1.10
   chewie: ^1.2.2
+  device_info_plus: ^2.1.0
 
 
   # APP ONLY ONLY PLUGIN

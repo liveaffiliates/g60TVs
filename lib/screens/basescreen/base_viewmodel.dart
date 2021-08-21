@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:g60/services/firebase_service.dart';
+import 'package:g60/services/posservice.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:g60/locator.dart';
 import 'package:uuid/uuid.dart';
@@ -13,6 +14,7 @@ class BaseViewModel extends ChangeNotifier {
   final dialogService = locator<DialogService>();
   final navigationService = locator<NavigationService>();
   final firestoreService = locator<FireStoreService>();
+  final posService = locator<PosService>();
 
 
   List<StreamSubscription<dynamic>> _subscriptions = [];

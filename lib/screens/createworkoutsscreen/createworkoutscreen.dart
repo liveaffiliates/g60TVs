@@ -188,9 +188,7 @@ class _CreateWorkoutScreenState extends State<CreateWorkoutScreen> {
                               physics: NeverScrollableScrollPhysics(),
                               itemCount: setsPerStation,
                               itemBuilder: (BuildContext ctxt, int setIndex) {
-
                                 int exerciseIndex = stationIndex * setsPerStation + setIndex;
-
                                 return Padding(
                                   padding: const EdgeInsets.only(bottom: 20),
                                   child: InkWell(

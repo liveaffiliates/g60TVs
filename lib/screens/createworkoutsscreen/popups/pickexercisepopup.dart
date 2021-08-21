@@ -101,12 +101,21 @@ class PickExercisePopupState extends State<PickExercisePopup>
                                       itemBuilder: (context, index) {
                                         Exercise exercise = exercises[index];
                                         return
-                                          Container(
-                                            height: 200,
-                                            child: Card(
-                                              child: ChewieListItem(
-                                                videoUrl: exercises[index].getVideoURL ??
-                                                    'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/error.mp4',
+                                          Card(
+                                            elevation: 5,
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: Column(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  Text(exercises[index].getName ?? '', textAlign: TextAlign.center,  style: Theme.of(context).textTheme.bodyText1!.copyWith(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.black)),
+                                                  ChewieListItem(
+                                                    videoUrl: exercises[index].getVideoURL ??
+                                                        'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/error.mp4',
+                                                  ),
+                                                 Text('Exercise Type: ' +  (exercises[index].getType ?? 'General'), textAlign: TextAlign.center,  style: Theme.of(context).textTheme.bodyText1!.copyWith(fontWeight: FontWeight.normal, fontSize: 16, color: Colors.black)),
+                                                 Text('Muscle Group: ' +  (exercises[index].getSubType ?? 'Whole body'), textAlign: TextAlign.center,  style: Theme.of(context).textTheme.bodyText1!.copyWith(fontWeight: FontWeight.normal, fontSize: 16, color: Colors.black)),
+                                                ],
                                               ),
                                             ),
                                           );
@@ -135,6 +144,7 @@ class ChewieListItem extends StatefulWidget {
   // This will contain the URL/asset path which we want to play
   final String videoUrl;
 
+
   ChewieListItem({required this.videoUrl});
 
   @override
@@ -144,63 +154,89 @@ class ChewieListItem extends StatefulWidget {
 class _ChewieListItemState extends State<ChewieListItem> {
 
   late VideoPlayerController _videoPlayerController;
-  late ChewieController _chewieController;
+
 
   @override
   void initState() {
     super.initState();
-    initializeVideoPlayer();
-    _chewieController = ChewieController(
-      videoPlayerController: _videoPlayerController,
-      aspectRatio: 16/9,
-      showControls: false,
-      // Prepare the video to be played and display the first frame
-      looping: true,
-      autoPlay: true,
-      allowFullScreen: false,
-      allowMuting: true,
-      allowedScreenSleep: false,
-      autoInitialize: true,
-      // Errors can occur for example when trying to play a video
-      // from a non-existent URL
-      errorBuilder: (context, errorMessage) {
-        return Center(
-          child: Text(
-            errorMessage,
-            style: TextStyle(color: Colors.white),
-          ),
-        );
-      },
-    );
 
+    _videoPlayerController = VideoPlayerController.network(
+        widget.videoUrl)
+      ..initialize().then((_) {
+        // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
+        setState(() {});
+        _videoPlayerController.addListener(() {
+            if (!_videoPlayerController.value.isPlaying &&
+                _videoPlayerController.value.isInitialized &&
+                (_videoPlayerController.value.duration ==
+                    _videoPlayerController.value
+                        .position)) { //checking the duration and position every time
+              //Video Completed//
+              setState(() {
+                _videoPlayerController.play();
+              });
+            }
+        });
+      });
   }
 
-  Future<void> initializeVideoPlayer() async {
-      _videoPlayerController = VideoPlayerController.network(widget.videoUrl);
-      await Future.wait([
-        _videoPlayerController.initialize()
-      ]);
-  }
-
-  Future<bool> playVideo () async{
-    await Future.delayed(const Duration(seconds: 2), (){});
+  Future <bool> playVideo() async {
     return true;
   }
 
-
-
-  @override
+    @override
   Widget build(BuildContext context) {
     return FutureBuilder(
       future: playVideo(),
-      builder: (context, snapshot){
+      builder: (context, snapshot) {
+
         if (snapshot.hasData){
-          //_videoPlayerController.play();
-          return Center(
-            child: Chewie(
-              controller: _chewieController,
-            )
-          );
+
+          return _videoPlayerController.value.isInitialized
+                ? Container(
+                    height: 200,
+                    child: Stack(
+                      children: [
+                        Center(
+                          child: AspectRatio(
+                            aspectRatio: _videoPlayerController.value.aspectRatio,
+                            child: VideoPlayer(_videoPlayerController),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 0.0),
+                          child: Align(
+                            alignment: Alignment.bottomCenter,
+                            child: IconButton(
+                              icon: Icon(
+                                  _videoPlayerController.value.isPlaying
+                                      ? Icons.pause
+                                      : Icons.play_arrow,
+                                  color: Colors.lightBlue),
+                              onPressed: () {
+                                setState(() {
+                                  _videoPlayerController.value.isPlaying
+                                      ? _videoPlayerController.pause()
+                                      : _videoPlayerController.play();
+                                });
+                              },
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                : Container(
+                  height: 200,
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        CircularProgressIndicator(),
+                        SizedBox(height: 20),
+                        Text('Loading'),
+                      ],
+                    ),
+                );
         } else {
           return Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -216,12 +252,13 @@ class _ChewieListItemState extends State<ChewieListItem> {
     );
   }
 
+
   @override
   void dispose() {
     super.dispose();
     // IMPORTANT to dispose of all the used resources
     _videoPlayerController.dispose();
-    _chewieController.dispose();
+
   }
 }
 
@@ -245,7 +282,6 @@ class _ChewieListItemState extends State<ChewieListItem> {
 //             //     child: Column(
 //             //       mainAxisSize: MainAxisSize.min,
 //             //       children: [
-//             //         Text(exercises[index].getName ?? 'No exercise', textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyText1!.copyWith(fontWeight: FontWeight.bold, fontSize: 26, color: Colors.white)),
 //             //         Text('Type: ' +  (exercises[index].getType ?? 'No type'), textAlign: TextAlign.center,  style: Theme.of(context).textTheme.bodyText1!.copyWith(fontWeight: FontWeight.bold, fontSize: 24, color: Colors.white)),
 //             //         Text('Subtype: ' +  (exercises[index].getSubType ?? 'No subtype'), textAlign: TextAlign.center,  style: Theme.of(context).textTheme.bodyText1!.copyWith(fontWeight: FontWeight.bold, fontSize: 24, color: Colors.white)),
 //             //       ],
